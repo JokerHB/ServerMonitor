@@ -5,7 +5,7 @@ import logging
 logger=logging.getLogger()
 handler=logging.FileHandler("Log_test.txt")
 logger.addHandler(handler)
-logger.setLevel(logging.ERROR)
+logger.setLevel(logging.NOTSET)
 
 systemInfo = SystemInfo.SystemInfo(pids=None, processName=None)
 
