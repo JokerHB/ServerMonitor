@@ -30,7 +30,7 @@ while True :
                 _pids = psutil.pids()
                 logger.error("This is an error message " + str(pid))
             else :
-                top[p.name()] = p.cpu_percent()
+                top[p.name()] = p.cpu_percent(interval=.1)
             # print p.cpu_percent(),
         top = sorted(top.iteritems(), key=lambda d:d[1], reverse=True)
         logger.info(str(top))
