@@ -107,13 +107,12 @@ class SystemInfo(object) :
             self.pids = []
         else :
             notExist = []
-            pids = psutil.pids()
+            procs = psutil.process_iter()
             for pName in processName :
                 isFind = False
-                for pid in pids :
-                    p = psutil.Process(pid)
-                    if p.name() == pName :
-                        self.pids.append(pid)
+                for proc in procs :
+                    if proc.name() == pName :
+                        self.pids.append(proc.pid)
                         isFind = True
                         break
                 if isFind == False :
