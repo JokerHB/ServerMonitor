@@ -119,32 +119,3 @@ class SystemInfo(object) :
                     notExist.append(pName)
 
             return notExist
-
-t = SystemInfo()
-t.globalInfo()
-
-# print t.sysInfo
-#
-# print t.sysInfo['cpu']
-#
-# print t.sysInfo['mem']
-#
-# print t.sysInfo['disk']
-
-# print t.sysInfo
-#
-# print t.sysInfo[2]
-#
-# print type(t.sysInfo[2])
-#
-# print type(t.sysInfo[2][0])
-#
-# print str(t.sysInfo[2][0]).split(',')
-#
-# print t.sysInfo[2][0].free
-#
-# print t.sysInfo[2][0].percent
-
-# t.globalInfo()
-#
-# print t.sysInfo
