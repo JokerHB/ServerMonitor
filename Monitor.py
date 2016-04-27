@@ -18,6 +18,9 @@ cpuAlertCounter = 0
 memAlertCount = int(systemInfo.mem_wait_time)
 memAlertCounter = 0
 
+netAlertCount = int(systemInfo.net_wait_time)
+netAlertCounter = 0
+
 def cpuInfoCheck(cpuInfo) :
     count = 0
     for rate in cpuInfo :
@@ -29,6 +32,20 @@ def cpuInfoCheck(cpuInfo) :
 
 def memInfoCheck(memInfo) :
     if memInfo.percent > systemInfo.mem_upper_limit or memInfo.percent < systemInfo.mem_upper_limit:
+        return True
+    return False
+
+def diskInfoCheck(diskInfo) :
+    if diskInfo.percent > systemInfo.disk_alert_limit :
+        return True
+    return False
+
+def netInfoCheck(netInfo, interface) :
+    try :
+        speed = netInfo[interface]
+    except :
+        return True
+    if (speed[0] > systemInfo.net_upload_upper_limit or speed[0] < systemInfo.net_upload_lower_limit) and (speed[1] < systemInfo.net_down_lower_limit or speed[1] > systemInfo.net_down_upper_limit) :
         return True
     return False
 
@@ -44,7 +61,6 @@ while True :
         # call the alert moduel
         print 'cpu alert'
         cpuAlertCounter = 0
-
     if cpuInfoCheck(systemInfo.sysInfo_cpu[1]) :
         cpuAlertCounter += 1
     else :
@@ -54,14 +70,32 @@ while True :
     systemInfo.getMemInfo()
     if memAlertCounter > memAlertCount :
         # calthe alert moduel
+        # report the top 10 process
         print 'mem alert'
         memAlertCounter = 0
-
     if memInfoCheck(systemInfo.sysInfo_mem[0]) :
         memAlertCounter += 1
     else :
         memAlertCounter = 0
 
-    deBugOutPut()
+    # check disk usage rate
+    systemInfo.getDiskInfo()
+    if diskInfoCheck(systemInfo.sysInfo_disk[0]) :
+        # call alert moduel
+        # report the detail usage
+        print 'disk alert'
+
+    # check net usage rate
+    systemInfo.getNetInfo()
+    if netAlertCounter > netAlertCount :
+        # call alert moduel
+        # report the up/download speed
+        print 'net alert'
+    if netInfoCheck(systemInfo.sysInfo_net, 'lo') :
+        netAlertCounter += 1
+    else :
+        netAlertCounter = 0
+
+    # deBugOutPut()
 
     break
