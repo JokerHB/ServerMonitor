@@ -68,7 +68,7 @@ class SystemInfo(object) :
             self.processInfo_cpu = []
             for pid in pids :
                 tmp = psutil.Process(pid)
-                self.processInfo_cpu.append(tmp.cpu_percent(interval=.10))
+                self.processInfo_cpu.append(tmp.cpu_percent(interval=.1))
 
     def getMemInfo(self, pids = None) :
         if pids == None:

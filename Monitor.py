@@ -12,39 +12,13 @@ systemInfo = SystemInfo.SystemInfo(pids=None, processName=None)
 cpuAlertCount = int(systemInfo.cpu_wait_time)
 cpuAlertCounter = 0
 
+print systemInfo.sysInfo_cpu
+
 while True :
     # check cpu usage rate
     systemInfo.getCpuInfo()
-    # if cpuAlertCount > cpuAlertCount :
+    if cpuAlertCount > cpuAlertCount :
         # call the alert moduel
-        # list top 10 process
-    # print systemInfo.sysInfo_cpu
-    while True:
-        top = {}
-        _pids = psutil.pids()
-        for pid in _pids:
-            try :
-                p = psutil.Process(pid)
-            except :
-                # print 'error'
-                _pids = psutil.pids()
-                logger.error("This is an error message " + str(pid))
-            else :
-                top[p.name()] = p.cpu_percent(interval=.1)
-            # print p.cpu_percent(),
-        top = sorted(top.iteritems(), key=lambda d:d[1], reverse=True)
-        logger.info(str(top))
-        # top = top[0:10]
-        # print 'cpu is busy'
-        # print top
-        break
+        print 'alert'
 
-
-# logger=logging.getLogger()
-# handler=logging.FileHandler("Log_test.txt")
-# logger.addHandler(handler)
-# logger.setLevel(logging.ERROR)
-# logger.error("This is an error message")
-# logger.info("This is an info message")
-# logger.critical("This is a critical message")
-
+    break
