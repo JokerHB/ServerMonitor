@@ -6,10 +6,10 @@ from email.header import Header
 from email.utils import parseaddr, formataddr
 
 class Email(object):
-    sender = 'sjb_yhzsk@sina.com'
-    mail_host = 'smtp.sina.com'
-    mail_user = 'sjb_yhzsk@sina.com'
-    mail_pass = 'sjb_yhzsk0'
+    sender = ''
+    mail_host = ''
+    mail_user = ''
+    mail_pass = ''
 
     def __init__(self, receiver = None):
         if receiver == None:
@@ -41,7 +41,3 @@ class Email(object):
     def addressFormat(self, add):
         name, address = parseaddr(add)
         return formataddr((Header(name, 'utf-8').encode(), address))
-
-email = Email()
-
-email.sendMails('hello world', ['aifjhb0815@gmail.com', 'jhb_0815@icloud.com'])
