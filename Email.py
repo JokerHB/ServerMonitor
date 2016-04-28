@@ -1,33 +1,43 @@
 import smtplib
+import copy
 from email.mime.text import MIMEText
 from email.header import Header
 from email.utils import parseaddr, formataddr
 
+class Email(object):
+    sender = 'sjb_yhzsk@sian.com'
+    mail_host = 'smtp.sina.com'
+    mail_user = 'sjb_yhzsk@sina.com'
+    mail_pass = 'sjb_yhzsk0'
 
-def _format_addr(s):
-    name, addr = parseaddr(s)
-    return formataddr((Header(name, 'utf-8').encode(), addr))
+    def __init__(self, receiver = None):
+        if receiver == None:
+            self.receivers = []
+        else:
+            self.receivers = copy.deepcopy(receiver)
 
-sender = 'sjb_yhzsk@sina.com'
-receiver = []
+    def sendBaseMail(self, content, receiver):
+        msg = MIMEText(_text=content, _subtype='plain', _charset='utf-8')
+        msg['From'] = self.addressFormat('Server <%s>' % self.sender)
+        msg['To'] = self.addressFormat('Admin <%s>' % receiver)
+        msg['Subject'] = Header('Server Alert', 'utf-8').encode()
 
-mail_host = 'smtp.sina.com'
-mail_user = 'sjb_yhzsk@sina.com'
-mail_pass = ''
+        try:
+            smtpObj = smtplib.SMTP()
+            smtpObj.connect(self.mail_host, 25)
+            # smtpObj.set_debuglevel(1)
+            smtpObj.login(self.mail_user, self.mail_pass)
+            smtpObj.sendmail(self.sender, receiver, msg.as_string())
+            smtpObj.quit()
+        except:
+            print 'send %s failed' % receiver
 
-message = MIMEText(_text='This is a test sent by python', _subtype='plain', _charset='utf-8')
-message['From'] = _format_addr('Test <%s>' % sender)
-message['To'] = _format_addr('Test')
-message['Subject'] = Header('Test', 'utf-8').encode()
+    def sendMails(self, content, receviers):
+        for recv in receviers:
+            self.sendBaseMail(content, recv)
 
-try:
-    smtpObj = smtplib.SMTP()
-    smtpObj.connect(mail_host, 25)
-    # smtpObj.set_debuglevel(1)
-    smtpObj.login(mail_user, mail_pass)
-    smtpObj.sendmail(sender, receiver, message.as_string())
-    smtpObj.quit()
+    def addressFormat(addr):
+        name, addr = parseaddr(addr)
+        return formataddr((Header(name, 'utf-8').encode(), addr))
 
-    print 'send success'
-except smtplib.SMTPException:
-    print 'send failed'
+
