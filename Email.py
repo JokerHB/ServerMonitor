@@ -5,10 +5,10 @@ from email.header import Header
 from email.utils import parseaddr, formataddr
 
 class Email(object):
-    sender = 'sjb_yhzsk@sian.com'
-    mail_host = 'smtp.sina.com'
-    mail_user = 'sjb_yhzsk@sina.com'
-    mail_pass = 'sjb_yhzsk0'
+    sender = ''
+    mail_host = ''
+    mail_user = ''
+    mail_pass = ''
 
     def __init__(self, receiver = None):
         if receiver == None:
