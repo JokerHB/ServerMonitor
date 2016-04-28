@@ -9,11 +9,11 @@ def _format_addr(s):
     return formataddr((Header(name, 'utf-8').encode(), addr))
 
 sender = 'sjb_yhzsk@sina.com'
-receiver = ['aifjhb0815@gmail.com', 'jhb_0815@163.com']
+receiver = []
 
 mail_host = 'smtp.sina.com'
 mail_user = 'sjb_yhzsk@sina.com'
-mail_pass = 'sjb_yhzsk0'
+mail_pass = ''
 
 message = MIMEText(_text='This is a test sent by python', _subtype='plain', _charset='utf-8')
 message['From'] = _format_addr('Test <%s>' % sender)
