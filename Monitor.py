@@ -1,6 +1,7 @@
 import psutil
 import SystemInfo
 import logging
+import Alert
 
 # log file
 logger=logging.getLogger()
@@ -8,11 +9,14 @@ handler=logging.FileHandler("SystemInfo.log")
 logger.addHandler(handler)
 logger.setLevel(logging.NOTSET)
 
-# alert limit define
-# region
 
 # system info get
 systemInfo = SystemInfo.SystemInfo(pids=None, processName=None)
+# alert center
+alertcenter = Alert.Alert()
+
+# alert limit define
+# region
 
 # alert limit configure
 cpuAlertCount = int(systemInfo.cpu_wait_time)
@@ -65,6 +69,7 @@ while True :
     if cpuAlertCounter > cpuAlertCount :
         # call the alert moduel
         print 'cpu alert'
+        alertcenter.cpuAlert(systemInfo.sysInfo_cpu)
         cpuAlertCounter = 0
     if cpuInfoCheck(systemInfo.sysInfo_cpu[1]) :
         cpuAlertCounter += 1
@@ -77,6 +82,7 @@ while True :
         # calthe alert moduel
         # report the top 10 process
         print 'mem alert'
+        alertcenter.memAlert(systemInfo.sysInfo_mem)
         memAlertCounter = 0
     if memInfoCheck(systemInfo.sysInfo_mem[0]) :
         memAlertCounter += 1
@@ -89,13 +95,14 @@ while True :
         # call alert moduel
         # report the detail usage
         print 'disk alert'
-
+        alertcenter.diskAlert(systemInfo.sysInfo_disk)
     # check net usage rate
     systemInfo.getNetInfo()
     if netAlertCounter > netAlertCount :
         # call alert moduel
         # report the up/download speed
         print 'net alert'
+        alertcenter.netAlert(interface='lo', netInfo=systemInfo.sysInfo_net)
     if netInfoCheck(systemInfo.sysInfo_net, 'lo') :
         netAlertCounter += 1
     else :
