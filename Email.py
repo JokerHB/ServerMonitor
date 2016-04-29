@@ -6,10 +6,13 @@ from email.header import Header
 from email.utils import parseaddr, formataddr
 
 class Email(object):
+    # sender predefine
+    # region
     sender = ''
     mail_host = ''
     mail_user = ''
     mail_pass = ''
+    # endregion
 
     def __init__(self, receiver = None):
         if receiver == None:
@@ -27,7 +30,7 @@ class Email(object):
         try:
             smtpObj = smtplib.SMTP()
             smtpObj.connect(self.mail_host, 25)
-            smtpObj.set_debuglevel(1)
+            # smtpObj.set_debuglevel(1)
             smtpObj.login(self.mail_user, self.mail_pass)
             smtpObj.sendmail(self.sender, receiver, msg.as_string())
             smtpObj.quit()
