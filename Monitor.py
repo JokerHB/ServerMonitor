@@ -8,6 +8,9 @@ handler=logging.FileHandler("SystemInfo.log")
 logger.addHandler(handler)
 logger.setLevel(logging.NOTSET)
 
+# alert limit define
+# region
+
 # system info get
 systemInfo = SystemInfo.SystemInfo(pids=None, processName=None)
 
@@ -20,6 +23,8 @@ memAlertCounter = 0
 
 netAlertCount = int(systemInfo.net_wait_time)
 netAlertCounter = 0
+
+# endregion
 
 def cpuInfoCheck(cpuInfo) :
     count = 0
