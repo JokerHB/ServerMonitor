@@ -124,5 +124,3 @@ while True :
     time.sleep(1.0)
 
     # deBugOutPut()
-
-    break
