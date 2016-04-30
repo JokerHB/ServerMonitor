@@ -2,6 +2,7 @@ import psutil
 import SystemInfo
 import logging
 import Alert
+import time
 
 # log file
 logger=logging.getLogger()
@@ -14,6 +15,9 @@ logger.setLevel(logging.NOTSET)
 systemInfo = SystemInfo.SystemInfo(pids=None, processName=None)
 # alert center
 alertcenter = Alert.Alert()
+
+# process names
+processNames = ['python', 'zsh']
 
 # alert limit define
 # region
@@ -64,6 +68,7 @@ def deBugOutPut():
     print systemInfo.processInfo_mem
 
 while True :
+    alertcenter.alertInfos = ''
     # check cpu usage rate
     systemInfo.getCpuInfo()
     if cpuAlertCounter > cpuAlertCount :
@@ -96,6 +101,7 @@ while True :
         # report the detail usage
         print 'disk alert'
         alertcenter.diskAlert(systemInfo.sysInfo_disk)
+
     # check net usage rate
     systemInfo.getNetInfo()
     if netAlertCounter > netAlertCount :
@@ -107,6 +113,15 @@ while True :
         netAlertCounter += 1
     else :
         netAlertCounter = 0
+
+    # check process info
+    notExist = systemInfo.getPidByProcessName(processName=processNames)
+    if notExist != None and len(notExist) > 0:
+        alertcenter.procAlert(notExist)
+
+    alertcenter.alert()
+
+    time.sleep(1.0)
 
     # deBugOutPut()
 
