@@ -81,9 +81,9 @@ class Alert(object):
 
     # process alert, send the process which is not running
     def procAlert(self, procName):
-        alertInfo = 'Not Running Process are: ' + '\n'
+        alertInfo = 'Not Running Process are: '
         for _procName in procName:
-            alertInfo += _procName + '  '
+            alertInfo +=  + _procName + '  '
         alertInfo += '\n'
 
         self.alertInfos += alertInfo
