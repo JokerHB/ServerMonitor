@@ -1,9 +1,17 @@
 import psutil
 import copy
+import Email
 
 class Alert(object):
     def __init__(self):
-        print 'alert'
+        self.alertInfos = ''
+
+    # alert, send email to admin
+    def alert(self):
+        if len(self.alertInfos) >0:
+            tmpEmail = Email.Email()
+            tmpEmail.sendMails(self.alertInfos, ['aifjhb0815@gmail.com'])
+            self.alertInfos = ''
 
     # cpu alert, send top 10 process' cpu percent
     def cpuAlert(self, cpuInfo):
@@ -29,6 +37,7 @@ class Alert(object):
         for p in pinfos :
             alertInfo += '      ' + str(p) + '\n'
 
+        self.alertInfos += alertInfo
         return alertInfo
 
     # mem alert, send top 10 process' mem percent
@@ -53,26 +62,31 @@ class Alert(object):
         for p in pinfos:
             alertInfo += '      ' + str(p) + '\n'
 
+        self.alertInfos += alertInfo
         return alertInfo
 
     # disk alert, send percentage of free, size of disk, free size, used size
     def diskAlert(self, diskInfo):
         alertInfo = 'Disk: ' + self.sizeConvert(diskInfo[0].total) + ' total ' + str(diskInfo[0].percent) + '% used ' + self.sizeConvert(diskInfo[0].free) + ' free' + '\n'
 
+        self.alertInfos += alertInfo
         return alertInfo
 
     # net alert, send current net rate
     def netAlert(self, netInfo, interface):
         alertInfo = 'Net ' + interface + ': upload speed: ' + str(netInfo[0]) + ' download speed: ' + str(netInfo[1]) + '\n'
 
+        self.alertInfos += alertInfo
         return alertInfo
 
     # process alert, send the process which is not running
     def procAlert(self, procName):
         alertInfo = 'Not Running Process are: ' + '\n'
         for _procName in procName:
-            alertInfo += _procName + '\n'
+            alertInfo += _procName + '  '
+        alertInfo += '\n'
 
+        self.alertInfos += alertInfo
         return alertInfo
 
     def sizeConvert(self, size):
