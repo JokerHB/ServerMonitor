@@ -11,6 +11,7 @@ class Alert(object):
         if len(self.alertInfos) >0:
             tmpEmail = Email.Email()
             tmpEmail.sendMails(self.alertInfos, ['aifjhb0815@gmail.com'])
+            print self.alertInfos
             self.alertInfos = ''
 
     # cpu alert, send top 10 process' cpu percent
@@ -27,7 +28,7 @@ class Alert(object):
             try:
                 pinfo = p.as_dict(attrs=['name', 'cpu_percent'])
             except psutil.NoSuchProcess:
-                print 'error'
+                print 'error: can not get proc info'
             else:
                 pinfos[pinfo['name']] = pinfo['cpu_percent']
 
@@ -52,7 +53,7 @@ class Alert(object):
             try:
                 pinfo = p.as_dict(attrs=['name', 'memory_percent'])
             except psutil.NoSuchProcess:
-                print 'error'
+                print 'error: can not get proc info'
             else:
                 pinfos[pinfo['name']] = round(pinfo['memory_percent'], 2)
 
