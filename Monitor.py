@@ -17,7 +17,7 @@ systemInfo = SystemInfo.SystemInfo(pids=None, processName=None)
 alertcenter = Alert.Alert()
 
 # process names
-processNames = ['python', 'zsh']
+processNames = ['python', 'zsh', 'java']
 
 # alert limit define
 # region
@@ -37,14 +37,14 @@ netAlertCounter = 0
 def cpuInfoCheck(cpuInfo) :
     count = 0
     for rate in cpuInfo :
-        if rate > systemInfo.cpu_upper_limit or rate < systemInfo.cpu_lower_limit :\
+        if rate > systemInfo.cpu_upper_limit or rate < systemInfo.cpu_lower_limit :
             count += 1
     if count == len(cpuInfo) :
         return True
     return False
 
 def memInfoCheck(memInfo) :
-    if memInfo.percent > systemInfo.mem_upper_limit or memInfo.percent < systemInfo.mem_upper_limit:
+    if memInfo.percent > systemInfo.mem_upper_limit or memInfo.percent < systemInfo.mem_lower_limit :
         return True
     return False
 
@@ -121,6 +121,6 @@ while True :
 
     alertcenter.alert()
 
-    time.sleep(1.0)
+    time.sleep(60.0)
 
     # deBugOutPut()

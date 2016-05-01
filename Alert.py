@@ -18,9 +18,10 @@ class Alert(object):
     def cpuAlert(self, cpuInfo):
         alertInfo = 'CPU Number is ' + str(cpuInfo[0]) + '\n'
         alertInfo += 'Current rate in each CPU: ' + '\n'
-
-        for i in range(int(cpuInfo[0])) :
-            alertInfo += '      #' + str(i + 1) + '     ' + str(cpuInfo[0][i]) + '\n'
+        count = 1
+        for cpu in cpuInfo[1] :
+            alertInfo += '      #' + str(count) + '     ' + str(cpu) + '%\n'
+            count += 1
 
         procs = psutil.process_iter()
         pinfos = {}
