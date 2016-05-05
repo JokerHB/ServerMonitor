@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <configure>
+        <interval value = "60.0" />
         <email>
                 <host host = "" />
                 <user user = "" />

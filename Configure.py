@@ -60,6 +60,9 @@ class Configure(object):
 
         return procName
 
+    def getInterval(self):
+        return self.getElement('interval')
+
     def getTags(self, tagName):
         root = self.xml.documentElement
         tags = root.getElementsByTagName(tagName)
