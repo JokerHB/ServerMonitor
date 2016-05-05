@@ -2,10 +2,13 @@
 
 <configure>
         <interval value = "60.0" />
-        <email>
-                <host host = "" />
-                <user user = "" />
-                <password pass = "" />
+        <email host = "" user = "" password ="">
+                <senders>
+                        <sender address = "" />
+                </senders>
+                <receivers>
+                        <receiver address = "" />
+                </receivers>
         </email>
         <process>
                 <proc name = "python" />

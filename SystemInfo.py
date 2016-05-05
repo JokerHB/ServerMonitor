@@ -123,3 +123,23 @@ class SystemInfo(object) :
                     notExist.append(pName)
 
             return notExist
+
+    def setNetLimit(self, limit):
+        self.net_upload_upper_limit = float(str(limit.up_up))
+        self.net_upload_lower_limit = float(str(limit.up_down))
+        self.net_down_upper_limit = float(str(limit.down_up))
+        self.net_down_lower_limit = float(str(limit.down_down))
+        self.net_wait_time = float(str(limit.wait_time))
+
+    def setMemLimit(self, limit):
+        self.mem_upper_limit = float(str(limit.up))
+        self.mem_lower_limit = float(str(limit.down))
+        self.mem_wait_time = float(str(limit.wait_time))
+
+    def setCpuLimit(self, limit):
+        self.cpu_upper_limit = float(str(limit.up))
+        self.cpu_lower_limit = float(str(limit.down))
+        self.cpu_wait_time = float(str(limit.wait_time))
+
+    def setDiskLimit(self, limit):
+        self.disk_alert_limit = float(str(limit.limit))

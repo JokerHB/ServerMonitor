@@ -1,4 +1,5 @@
 import psutil
+import Configure
 import SystemInfo
 import logging
 import Alert
@@ -10,14 +11,17 @@ handler=logging.FileHandler("SystemInfo.log")
 logger.addHandler(handler)
 logger.setLevel(logging.NOTSET)
 
+# config setter
+config = Configure.Configure('./config.xml')
 
 # system info get
 systemInfo = SystemInfo.SystemInfo(pids=None, processName=None)
+
 # alert center
 alertcenter = Alert.Alert()
 
 # process names
-processNames = ['python', 'zsh', 'java']
+processNames = []
 
 # alert limit define
 # region
@@ -32,7 +36,18 @@ memAlertCounter = 0
 netAlertCount = int(systemInfo.net_wait_time)
 netAlertCounter = 0
 
+# interval time
+interval = 0.0
+
 # endregion
+
+def configSet():
+    systemInfo.setCpuLimit(config.getCpu())
+    systemInfo.setDiskLimit(config.getDisk())
+    systemInfo.setMemLimit(config.getMem())
+    systemInfo.setNetLimit(config.getNet())
+    interval = float(str(config.getInterval()))
+    processNames = config.getProc()
 
 def cpuInfoCheck(cpuInfo) :
     count = 0
@@ -115,12 +130,12 @@ while True :
         netAlertCounter = 0
 
     # check process info
-    notExist = systemInfo.getPidByProcessName(processName=processNames)
+    notExist = systemInfo.getPidByProcessName(processName=str(processNames))
     if notExist != None and len(notExist) > 0:
         alertcenter.procAlert(notExist)
 
     alertcenter.alert()
 
-    time.sleep(60.0)
+    time.sleep(interval)
 
     # deBugOutPut()
