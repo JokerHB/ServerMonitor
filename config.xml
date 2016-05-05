@@ -14,6 +14,8 @@
                 <net>
                         <net_upload_upper_limit value = "1000.0" />
                         <net_upload_lower_limit value = "0.0" />
+                        <net_down_upper_limit value = "1000.0" />
+                        <net_down_lower_limit value = "0.0" />
                         <net_wait_time  value = "2.0" />
                 </net>
                 <mem>
