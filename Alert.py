@@ -1,17 +1,20 @@
 import psutil
 import copy
 import Email
+import time
 
 class Alert(object):
     def __init__(self):
         self.alertInfos = ''
 
     # alert, send email to admin
-    def alert(self):
+    def alert(self, emailInfo, Receiver):
         if len(self.alertInfos) >0:
+            t = time.strftime('%a, %d %b %Y %H:%M:%S %z')
             tmpEmail = Email.Email()
-            tmpEmail.sendMails(self.alertInfos, ['aifjhb0815@gmail.com'])
-            print self.alertInfos
+            tmpEmail.setBaseInfo(emailInfo)
+            tmpEmail.sendMails(t + '\n' + self.alertInfos, Receiver)
+            print  t + '\n' + self.alertInfos
             self.alertInfos = ''
 
     # cpu alert, send top 10 process' cpu percent
@@ -76,7 +79,8 @@ class Alert(object):
 
     # net alert, send current net rate
     def netAlert(self, netInfo, interface):
-        alertInfo = 'Net ' + interface + ': upload speed: ' + str(netInfo[0]) + ' download speed: ' + str(netInfo[1]) + '\n'
+        # print netInfo, interface
+        alertInfo = 'Net ' + interface + ': upload speed: ' + str(netInfo[interface][0]) + ' download speed: ' + str(netInfo[interface][1]) + '\n'
 
         self.alertInfos += alertInfo
         return alertInfo

@@ -44,3 +44,9 @@ class Email(object):
     def addressFormat(self, add):
         name, address = parseaddr(add)
         return formataddr((Header(name, 'utf-8').encode(), address))
+
+    def setBaseInfo(self, info):
+        self.mail_host = info.host
+        self.mail_pass = info.password
+        self.mail_user = info.user
+        self.sender = info.sender

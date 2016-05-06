@@ -107,7 +107,7 @@ class SystemInfo(object) :
             self.pids = []
         else :
             notExist = []
-            print processName
+            # print processName
             for pName in processName :
                 isFind = False
                 procs = psutil.process_iter()

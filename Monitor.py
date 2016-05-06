@@ -23,6 +23,10 @@ alertcenter = Alert.Alert()
 # process names
 processNames = []
 
+# email info
+mailInfo = None
+receiver = []
+
 # alert limit define
 # region
 
@@ -41,30 +45,32 @@ interval = 0.0
 
 # endregion
 
-def configSet():
-    systemInfo.setCpuLimit(config.getCpu())
-    systemInfo.setDiskLimit(config.getDisk())
-    systemInfo.setMemLimit(config.getMem())
-    systemInfo.setNetLimit(config.getNet())
-    interval = float(str(config.getInterval()))
-    processNames = config.getProc()
+systemInfo.setCpuLimit(config.getCpu())
+systemInfo.setDiskLimit(config.getDisk())
+systemInfo.setMemLimit(config.getMem())
+systemInfo.setNetLimit(config.getNet())
+interval = float(str(config.getInterval()))
+processNames = config.getProc()
+mailInfo = config.getEmail()
+receiver = config.getRecevier()
+interface = config.getNet().interface
 
 def cpuInfoCheck(cpuInfo) :
     count = 0
     for rate in cpuInfo :
-        if rate > systemInfo.cpu_upper_limit or rate < systemInfo.cpu_lower_limit :
+        if rate >= systemInfo.cpu_upper_limit or rate <= systemInfo.cpu_lower_limit :
             count += 1
     if count == len(cpuInfo) :
         return True
     return False
 
 def memInfoCheck(memInfo) :
-    if memInfo.percent > systemInfo.mem_upper_limit or memInfo.percent < systemInfo.mem_lower_limit :
+    if memInfo.percent >= systemInfo.mem_upper_limit or memInfo.percent <= systemInfo.mem_lower_limit :
         return True
     return False
 
 def diskInfoCheck(diskInfo) :
-    if diskInfo.percent > systemInfo.disk_alert_limit :
+    if diskInfo.percent >= systemInfo.disk_alert_limit :
         return True
     return False
 
@@ -73,7 +79,7 @@ def netInfoCheck(netInfo, interface) :
         speed = netInfo[interface]
     except :
         return True
-    if (speed[0] > systemInfo.net_upload_upper_limit or speed[0] < systemInfo.net_upload_lower_limit) and (speed[1] < systemInfo.net_down_lower_limit or speed[1] > systemInfo.net_down_upper_limit) :
+    if (speed[0] >= systemInfo.net_upload_upper_limit or speed[0] <= systemInfo.net_upload_lower_limit) and (speed[1] <= systemInfo.net_down_lower_limit or speed[1] >= systemInfo.net_down_upper_limit) :
         return True
     return False
 
@@ -123,18 +129,18 @@ while True :
         # call alert moduel
         # report the up/download speed
         print 'net alert'
-        alertcenter.netAlert(interface='lo', netInfo=systemInfo.sysInfo_net)
-    if netInfoCheck(systemInfo.sysInfo_net, 'lo') :
+        alertcenter.netAlert(interface=interface , netInfo=systemInfo.sysInfo_net)
+    if netInfoCheck(systemInfo.sysInfo_net, interface) :
         netAlertCounter += 1
     else :
         netAlertCounter = 0
 
     # check process info
-    notExist = systemInfo.getPidByProcessName(processName=str(processNames))
+    notExist = systemInfo.getPidByProcessName(processName=processNames)
     if notExist != None and len(notExist) > 0:
         alertcenter.procAlert(notExist)
 
-    alertcenter.alert()
+    alertcenter.alert(emailInfo=mailInfo, Receiver=receiver)
 
     time.sleep(interval)
 

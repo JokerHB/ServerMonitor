@@ -12,12 +12,23 @@ class Configure(object):
             print 'open the file success, reading the file now'
 
     def getEmail(self):
-        EmailConfig = namedtuple('EmailConfig', ['host', 'user', 'password'])
-        host = self.getElement(tagName='host', attr='host')
-        user = self.getElement(tagName='user', attr='user')
-        password = self.getElement(tagName='password', attr='pass')
+        EmailConfig = namedtuple('EmailConfig', ['host', 'user', 'password', 'sender'])
 
-        return EmailConfig._make([host, user, password])
+        host = self.getElement(tagName='email', attr='host')
+        user = self.getElement(tagName='email', attr='user')
+        password = self.getElement(tagName='email', attr='password')
+        sender = self.getElement(tagName='email', attr='sender')
+
+        return EmailConfig._make([str(host), str(user), str(password), str(sender)])
+
+    def getRecevier(self):
+        receivers = []
+        tags = self.getTags(tagName='receiver')
+
+        for rec in tags:
+            receivers.append(str(rec.getAttribute('address')))
+
+        return receivers
 
     def getCpu(self):
         CpuConfig = namedtuple('CpuConfig', ['up', 'down', 'wait_time'])
@@ -42,23 +53,33 @@ class Configure(object):
         return DiskConfig._make([limit])
 
     def getNet(self):
-        NetConfig = namedtuple('NetConfig', ['up_up', 'up_down', 'down_up', 'down_down', 'wait_time'])
+        NetConfig = namedtuple('NetConfig', ['up_up', 'up_down', 'down_up', 'down_down', 'wait_time', 'interface'])
         up_up = self.getElement(tagName='net_upload_upper_limit')
         up_down = self.getElement(tagName='net_upload_lower_limit')
         down_up = self.getElement(tagName='net_down_upper_limit')
         down_down = self.getElement(tagName='net_down_lower_limit')
         wait_time = self.getElement(tagName='net_wait_time')
+        interface = self.getElement(tagName='net_interface')
 
-        return NetConfig._make([up_up, up_down, down_up, down_down, wait_time])
+        return NetConfig._make([up_up, up_down, down_up, down_down, wait_time, interface])
 
     def getProc(self):
         procName = []
         tags = self.getTags('proc')
 
         for proc in tags:
-            procName.append(proc.getAttribute('name'))
+            procName.append(str(proc.getAttribute('name')))
 
         return procName
+
+    def getNetInterface(self):
+        intrefaces = []
+        tags = self.getTags('net_interface')
+
+        for interface in tags:
+            intrefaces.append(str(interface.getAttribute('value')))
+
+        return intrefaces
 
     def getInterval(self):
         return self.getElement('interval')
@@ -73,4 +94,3 @@ class Configure(object):
         tags = self.getTags(tagName)[0]
 
         return tags.getAttribute(attr)
-

@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <configure>
-        <interval value = "60.0" />
-        <email host = "" user = "" password ="">
-                <senders>
-                        <sender address = "" />
-                </senders>
+        <interval value = "1.0" />
+        <email host = "sdf" user = "dsf" password ="sdf" sender="sdf" >
                 <receivers>
-                        <receiver address = "" />
+                        <receiver address = "sdf" />
                 </receivers>
         </email>
         <process>
@@ -16,11 +13,12 @@
         </process>
         <limit>
                 <net>
-                        <net_upload_upper_limit value = "1000.0" />
-                        <net_upload_lower_limit value = "0.0" />
-                        <net_down_upper_limit value = "1000.0" />
-                        <net_down_lower_limit value = "0.0" />
+                        <net_upload_upper_limit value = "0.0" />
+                        <net_upload_lower_limit value = "-1.0" />
+                        <net_down_upper_limit value = "0.0" />
+                        <net_down_lower_limit value = "-1.0" />
                         <net_wait_time  value = "2.0" />
+                        <net_interface value = "lo" />
                 </net>
                 <mem>
                         <mem_upper_limit value = "80.0" />
