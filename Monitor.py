@@ -4,6 +4,7 @@ import SystemInfo
 import logging
 import Alert
 import time
+import Loger
 
 def cpuInfoCheck(cpuInfo):
     count = 0
@@ -45,10 +46,7 @@ def deBugOutPut():
 
 if __name__ == '__main__':
     # log file
-    logger = logging.getLogger()
-    handler = logging.FileHandler("SystemInfo.log")
-    logger.addHandler(handler)
-    logger.setLevel(logging.NOTSET)
+    logger = Loger.Loger()
 
     # config setter
     config = Configure.Configure('./config.xml')
@@ -157,6 +155,6 @@ if __name__ == '__main__':
         if notExist != None and len(notExist) > 0:
             alertcenter.procAlert(notExist)
 
-        alertcenter.alert(emailInfo=mailInfo, Receiver=receiver)
+        alertcenter.alert(emailInfo=mailInfo, Receiver=receiver, Log=logger)
 
         time.sleep(interval)
