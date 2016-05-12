@@ -5,6 +5,44 @@ import logging
 import Alert
 import time
 
+def cpuInfoCheck(cpuInfo):
+    count = 0
+    for rate in cpuInfo:
+        if rate >= systemInfo.cpu_upper_limit or rate <= systemInfo.cpu_lower_limit:
+            count += 1
+    if count == len(cpuInfo):
+        return True
+    return False
+
+
+def memInfoCheck(memInfo):
+    if memInfo.percent >= systemInfo.mem_upper_limit or memInfo.percent <= systemInfo.mem_lower_limit:
+        return True
+    return False
+
+
+def diskInfoCheck(diskInfo):
+    if diskInfo.percent >= systemInfo.disk_alert_limit:
+        return True
+    return False
+
+
+def netInfoCheck(netInfo, interface):
+    try:
+        speed = netInfo[interface]
+    except:
+        return True
+    if (speed[0] >= systemInfo.net_upload_upper_limit or speed[0] <= systemInfo.net_upload_lower_limit) and (
+                    speed[1] <= systemInfo.net_down_lower_limit or speed[1] >= systemInfo.net_down_upper_limit):
+        return True
+    return False
+
+
+def deBugOutPut():
+    pids = psutil.pids()
+    systemInfo.getMemInfo(pids)
+    print systemInfo.processInfo_mem
+
 if __name__ == '__main__':
     # log file
     logger = logging.getLogger()
@@ -56,45 +94,16 @@ if __name__ == '__main__':
     receiver = config.getRecevier()
     interface = config.getNet().interface
 
-
-    def cpuInfoCheck(cpuInfo):
-        count = 0
-        for rate in cpuInfo:
-            if rate >= systemInfo.cpu_upper_limit or rate <= systemInfo.cpu_lower_limit:
-                count += 1
-        if count == len(cpuInfo):
-            return True
-        return False
-
-
-    def memInfoCheck(memInfo):
-        if memInfo.percent >= systemInfo.mem_upper_limit or memInfo.percent <= systemInfo.mem_lower_limit:
-            return True
-        return False
-
-
-    def diskInfoCheck(diskInfo):
-        if diskInfo.percent >= systemInfo.disk_alert_limit:
-            return True
-        return False
-
-
-    def netInfoCheck(netInfo, interface):
+    # preread the process info
+    procs = psutil.process_iter()
+    pinfos = {}
+    for p in procs:
         try:
-            speed = netInfo[interface]
-        except:
-            return True
-        if (speed[0] >= systemInfo.net_upload_upper_limit or speed[0] <= systemInfo.net_upload_lower_limit) and (
-                        speed[1] <= systemInfo.net_down_lower_limit or speed[1] >= systemInfo.net_down_upper_limit):
-            return True
-        return False
-
-
-    def deBugOutPut():
-        pids = psutil.pids()
-        systemInfo.getMemInfo(pids)
-        print systemInfo.processInfo_mem
-
+            pinfo = p.as_dict(attrs=['name', 'cpu_percent'])
+        except psutil.NoSuchProcess:
+            print 'error: can not get proc info'
+        else:
+            pinfos[pinfo['name']] = pinfo['cpu_percent']
 
     while True:
         alertcenter.alertInfos = ''
