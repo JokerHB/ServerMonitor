@@ -22,7 +22,7 @@ class Email(object):
 
     def sendBaseMail(self, content, receiver):
         msg = MIMEText(_text=content, _subtype='plain', _charset='utf-8')
-        msg['From'] = self.addressFormat('Test <%s>' % self.sender)
+        msg['From'] = self.addressFormat('Server Alert <%s>' % self.sender)
         msg['To'] = self.addressFormat('Admin <%s>' % receiver)
         msg['Subject'] = Header('Server Alert', 'utf-8').encode()
         msg['date'] = time.strftime('%a, %d %b %Y %H:%M:%S %z')
