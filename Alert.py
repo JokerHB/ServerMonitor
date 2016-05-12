@@ -80,7 +80,7 @@ class Alert(object):
     # net alert, send current net rate
     def netAlert(self, netInfo, interface):
         # print netInfo, interface
-        alertInfo = 'Net ' + interface + ': upload speed: ' + str(netInfo[interface][0]) + ' download speed: ' + str(netInfo[interface][1]) + '\n'
+        alertInfo = 'Net ' + interface + ': upload speed: ' + str(netInfo[interface][0]) + 'KB/s download speed: ' + str(netInfo[interface][1]) + 'KB/s\n'
 
         self.alertInfos += alertInfo
         return alertInfo
