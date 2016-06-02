@@ -15,7 +15,7 @@ class Alert(object):
             tmpEmail.setBaseInfo(emailInfo)
             tmpEmail.sendMails(t + '\n' + self.alertInfos, Receiver)
             # print  t + '\n' + self.alertInfos
-            Log.log_Error(self.alertInfos);
+            Log.log_Info(self.alertInfos);
             self.alertInfos = ''
 
     # cpu alert, send top 10 process' cpu percent

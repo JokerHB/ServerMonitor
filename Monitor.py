@@ -76,6 +76,12 @@ if __name__ == '__main__':
     netAlertCount = int(systemInfo.net_wait_time)
     netAlertCounter = 0
 
+    alertIgnore = {'cpu': 0,
+                   'mem': 0,
+                   'net': 0,
+                   'disk': 0,
+                   'pro': 0}
+
     # interval time
     interval = 0.0
 
@@ -110,7 +116,11 @@ if __name__ == '__main__':
         if cpuAlertCounter > cpuAlertCount:
             # call the alert moduel
             # print 'cpu alert'
-            alertcenter.cpuAlert(systemInfo.sysInfo_cpu)
+            if alertIgnore['cpu'] <= 0 :
+                alertcenter.cpuAlert(systemInfo.sysInfo_cpu)
+                alertIgnore['cpu'] = 100 * cpuAlertCount
+
+            alertIgnore['cpu'] -= 1
             cpuAlertCounter = 0
         if cpuInfoCheck(systemInfo.sysInfo_cpu[1]):
             cpuAlertCounter += 1
@@ -123,7 +133,11 @@ if __name__ == '__main__':
             # calthe alert moduel
             # report the top 10 process
             # print 'mem alert'
-            alertcenter.memAlert(systemInfo.sysInfo_mem)
+            if alertIgnore['mem'] <= 0:
+                alertcenter.memAlert(systemInfo.sysInfo_mem)
+                alertIgnore['mem'] = 100 * memAlertCount
+
+            alertIgnore['mem'] -= 1
             memAlertCounter = 0
         if memInfoCheck(systemInfo.sysInfo_mem[0]):
             memAlertCounter += 1
@@ -136,7 +150,11 @@ if __name__ == '__main__':
             # call alert moduel
             # report the detail usage
             # print 'disk alert'
-            alertcenter.diskAlert(systemInfo.sysInfo_disk)
+            if alertIgnore['disk'] == 0 :
+                alertcenter.diskAlert(systemInfo.sysInfo_disk)
+                alertIgnore['disk'] = 1
+        else:
+            alertIgnore['disk'] = 0
 
         # check net usage rate
         systemInfo.getNetInfo()
@@ -144,7 +162,11 @@ if __name__ == '__main__':
             # call alert moduel
             # report the up/download speed
             # print 'net alert'
-            alertcenter.netAlert(interface=interface, netInfo=systemInfo.sysInfo_net)
+            if alertIgnore['net'] <= 0 :
+                alertcenter.netAlert(interface=interface, netInfo=systemInfo.sysInfo_net)
+                alertIgnore['net'] = 100 * netAlertCount
+            alertIgnore['net'] -= 1
+            netAlertCounter = 0
         if netInfoCheck(systemInfo.sysInfo_net, interface):
             netAlertCounter += 1
         else:
@@ -153,8 +175,15 @@ if __name__ == '__main__':
         # check process info
         notExist = systemInfo.getPidByProcessName(processName=processNames)
         if notExist != None and len(notExist) > 0:
-            alertcenter.procAlert(notExist)
+            if alertIgnore['pro'] == 0 :
+                print notExist
+                alertcenter.procAlert(notExist)
+                alertIgnore['pro'] = 1
+        else:
+            alertIgnore['pro'] = 0
 
         alertcenter.alert(emailInfo=mailInfo, Receiver=receiver, Log=logger)
 
         time.sleep(interval)
+
+        # end of main

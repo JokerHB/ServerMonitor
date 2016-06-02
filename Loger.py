@@ -1,4 +1,5 @@
 import logging
+import logging.handlers
 
 class Loger(object):
     def __init__(self, logFilePath = './Monitor_log.log'):
@@ -12,6 +13,8 @@ class Loger(object):
         self.logHandle.setFormatter(self.logformattor)
         self.logger.addHandler(self.logHandle)
         self.logger.setLevel(logging.NOTSET)
+
+        self.splitByWeek()
 
     # log the info
     def log_Info(self, log_info):
@@ -27,5 +30,5 @@ class Loger(object):
 
     # split the log in every week
     def splitByWeek(self):
-        self.logSplitHandle = logging.handlers.TimedRotatingFileHandler(self.logfileName, when='W', interval=0, backupCount=40)
+        self.logSplitHandle = logging.handlers.TimedRotatingFileHandler(self.logfileName, when='M', interval=0, backupCount=40)
 
