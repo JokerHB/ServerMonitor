@@ -29,9 +29,3 @@ class Loger(object):
     def splitByWeek(self):
         self.logSplitHandle = logging.handlers.TimedRotatingFileHandler(self.logfileName, when='W', interval=0, backupCount=40)
 
-
-
-# test = Loger('./test.log')
-# test.log_Info('info')
-# test.log_Error('error')
-# test.log_Debug('debug')

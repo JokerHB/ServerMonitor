@@ -1,7 +1,6 @@
 import psutil
 import Configure
 import SystemInfo
-import logging
 import Alert
 import time
 import Loger
@@ -45,11 +44,11 @@ def deBugOutPut():
     print systemInfo.processInfo_mem
 
 if __name__ == '__main__':
-    # log file
-    logger = Loger.Loger()
-
     # config setter
     config = Configure.Configure('./config.xml')
+
+    # log file
+    logger = Loger.Loger(config.getLogFilePath())
 
     # system info get
     systemInfo = SystemInfo.SystemInfo(pids=None, processName=None)
@@ -99,7 +98,8 @@ if __name__ == '__main__':
         try:
             pinfo = p.as_dict(attrs=['name', 'cpu_percent'])
         except psutil.NoSuchProcess:
-            print 'error: can not get proc info'
+            # print 'error: can not get proc info'
+            logger.log_Error('can not get proc info')
         else:
             pinfos[pinfo['name']] = pinfo['cpu_percent']
 
@@ -109,7 +109,7 @@ if __name__ == '__main__':
         systemInfo.getCpuInfo()
         if cpuAlertCounter > cpuAlertCount:
             # call the alert moduel
-            print 'cpu alert'
+            # print 'cpu alert'
             alertcenter.cpuAlert(systemInfo.sysInfo_cpu)
             cpuAlertCounter = 0
         if cpuInfoCheck(systemInfo.sysInfo_cpu[1]):
@@ -122,7 +122,7 @@ if __name__ == '__main__':
         if memAlertCounter > memAlertCount:
             # calthe alert moduel
             # report the top 10 process
-            print 'mem alert'
+            # print 'mem alert'
             alertcenter.memAlert(systemInfo.sysInfo_mem)
             memAlertCounter = 0
         if memInfoCheck(systemInfo.sysInfo_mem[0]):
@@ -135,7 +135,7 @@ if __name__ == '__main__':
         if diskInfoCheck(systemInfo.sysInfo_disk[0]):
             # call alert moduel
             # report the detail usage
-            print 'disk alert'
+            # print 'disk alert'
             alertcenter.diskAlert(systemInfo.sysInfo_disk)
 
         # check net usage rate
@@ -143,7 +143,7 @@ if __name__ == '__main__':
         if netAlertCounter > netAlertCount:
             # call alert moduel
             # report the up/download speed
-            print 'net alert'
+            # print 'net alert'
             alertcenter.netAlert(interface=interface, netInfo=systemInfo.sysInfo_net)
         if netInfoCheck(systemInfo.sysInfo_net, interface):
             netAlertCounter += 1

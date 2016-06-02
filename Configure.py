@@ -84,6 +84,9 @@ class Configure(object):
     def getInterval(self):
         return self.getElement('interval')
 
+    def getLogFilePath(self):
+        return self.getElement(tagName='log', attr='filepath')
+
     def getTags(self, tagName):
         root = self.xml.documentElement
         tags = root.getElementsByTagName(tagName)

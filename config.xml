@@ -2,9 +2,10 @@
 
 <configure>
         <interval value = "1.0" />
-        <email host = "sdf" user = "dsf" password ="sdf" sender="sdf" >
+        <log filepath="./Monitor_log.log"/>
+        <email host = "example@example.com" user = "example@example.com" password ="" sender="" >
                 <receivers>
-                        <receiver address = "sdf" />
+                        <receiver address = "" />
                 </receivers>
         </email>
         <process>
@@ -33,5 +34,5 @@
                         <cpu_lower_limit value = "0.0" />
                         <cpu_wait_time value = "10.0" />
                 </cpu>
-    </limit>
+        </limit>
 </configure>

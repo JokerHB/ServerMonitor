@@ -14,7 +14,7 @@ class Alert(object):
             tmpEmail = Email.Email()
             tmpEmail.setBaseInfo(emailInfo)
             tmpEmail.sendMails(t + '\n' + self.alertInfos, Receiver)
-            print  t + '\n' + self.alertInfos
+            # print  t + '\n' + self.alertInfos
             Log.log_Error(self.alertInfos);
             self.alertInfos = ''
 
