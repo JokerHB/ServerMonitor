@@ -1,6 +1,8 @@
 import smtplib
 import copy
 import time
+import Loger
+import Configure
 from email.mime.text import MIMEText
 from email.header import Header
 from email.utils import parseaddr, formataddr
@@ -15,6 +17,8 @@ class Email(object):
     # endregion
 
     def __init__(self, receiver = None):
+        config = Configure.Configure('./config.xml')
+        self.logger = Loger.Loger(config.getLogFilePath())
         if receiver == None:
             self.receivers = []
         else:
@@ -35,7 +39,8 @@ class Email(object):
             smtpObj.sendmail(self.sender, receiver, msg.as_string())
             smtpObj.quit()
         except:
-            print 'send %s failed' % receiver
+            # print 'send %s failed' % receiver
+            self.logger.log_Error('EMAIL_SEND_FAILED')
 
     def sendMails(self, content, receviers):
         for recv in receviers:

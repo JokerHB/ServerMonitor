@@ -1,7 +1,14 @@
 import xml.dom.minidom
 from collections import namedtuple
 
-class Configure(object):
+class Singleton(object):
+    def __new__(cls, *args, **kw):
+        if not hasattr(cls, '_instance'):
+            orig = super(Singleton, cls)
+            cls._instance = orig.__new__(cls, *args, **kw)
+        return cls._instance
+
+class Configure(Singleton):
     def __init__(self, configureFilePath):
         try:
             self.xml = xml.dom.minidom.parse(configureFilePath)

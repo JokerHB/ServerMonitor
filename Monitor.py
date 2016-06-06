@@ -104,8 +104,7 @@ if __name__ == '__main__':
         try:
             pinfo = p.as_dict(attrs=['name', 'cpu_percent'])
         except psutil.NoSuchProcess:
-            # print 'error: can not get proc info'
-            logger.log_Error('can not get proc info')
+            print 'error: can not get proc info'
         else:
             pinfos[pinfo['name']] = pinfo['cpu_percent']
 
@@ -119,6 +118,7 @@ if __name__ == '__main__':
             if alertIgnore['cpu'] <= 0 :
                 alertcenter.cpuAlert(systemInfo.sysInfo_cpu)
                 alertIgnore['cpu'] = 100 * cpuAlertCount
+                logger.log_Error('CPU_RATE')
 
             alertIgnore['cpu'] -= 1
             cpuAlertCounter = 0
@@ -136,6 +136,7 @@ if __name__ == '__main__':
             if alertIgnore['mem'] <= 0:
                 alertcenter.memAlert(systemInfo.sysInfo_mem)
                 alertIgnore['mem'] = 100 * memAlertCount
+                logger.log_Error('MEM_RATE')
 
             alertIgnore['mem'] -= 1
             memAlertCounter = 0
@@ -153,6 +154,7 @@ if __name__ == '__main__':
             if alertIgnore['disk'] == 0 :
                 alertcenter.diskAlert(systemInfo.sysInfo_disk)
                 alertIgnore['disk'] = 1
+                logger.log_Error('DISK_SPACE')
         else:
             alertIgnore['disk'] = 0
 
@@ -165,6 +167,7 @@ if __name__ == '__main__':
             if alertIgnore['net'] <= 0 :
                 alertcenter.netAlert(interface=interface, netInfo=systemInfo.sysInfo_net)
                 alertIgnore['net'] = 100 * netAlertCount
+                logger.log_Error('NET_RATE')
             alertIgnore['net'] -= 1
             netAlertCounter = 0
         if netInfoCheck(systemInfo.sysInfo_net, interface):
@@ -176,13 +179,14 @@ if __name__ == '__main__':
         notExist = systemInfo.getPidByProcessName(processName=processNames)
         if notExist != None and len(notExist) > 0:
             if alertIgnore['pro'] == 0 :
-                print notExist
+                # print notExist
                 alertcenter.procAlert(notExist)
+                logger.log_Error('PROC_ERROR ' + str(notExist))
                 alertIgnore['pro'] = 1
         else:
             alertIgnore['pro'] = 0
 
-        alertcenter.alert(emailInfo=mailInfo, Receiver=receiver, Log=logger)
+        alertcenter.alert(emailInfo=mailInfo, Receiver=receiver)
 
         time.sleep(interval)
 
