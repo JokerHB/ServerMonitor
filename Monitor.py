@@ -40,6 +40,7 @@ def netInfoCheck(netInfo, interface):
 
 
 def weekReport():
+    _errorType = ['PROC_ERROR', 'CPU_RATE', 'EMAIL_SEND_FAILED', 'NET_RATE', 'DISK_SPACE', 'MEM_RATE']
     file = open('Monitor-' + logFileName + '.log', 'r')
 
     global logFileName
@@ -47,12 +48,46 @@ def weekReport():
     global logger
     logger = Loger.Loger('Monitor-' + logFileName + '.log')
 
-    for line in file:
-        print line
+    errorDict = logAnalyse(file)
+    report = 'Week Report\n'
+
+    cpuError = 'CPU abnormal times: ' + str(errorDict[_errorType[1]])
+    procError = 'Process abnormal exit times: ' + str(errorDict[_errorType[0]])
+    emailError = 'Mail sent the number of errors: ' + str(errorDict[_errorType[2]])
+    netError = 'Network traffic anomaly times: ' + str(errorDict[_errorType[3]])
+    diskError = 'Full capacity of hard disk times: ' + str(errorDict[_errorType[4]])
+    memError = 'Insufficient memory times: ' + str(errorDict[_errorType[5]])
+
+    alertcenter.alert_week(emailInfo=mailInfo, Receiver=receiver, logger=logger, weekInfo=(report + cpuError + '\n' + procError + '\n' + emailError + '\n' + netError + '\n' + diskError + '\n' + memError))
 
     global t
     t = threading.Timer(60 * 60 * 24 * 7, weekReport)
     t.start()
+
+def logAnalyse(file):
+    _errorType = ['PROC_ERROR', 'CPU_RATE', 'EMAIL_SEND_FAILED', 'NET_RATE', 'DISK_SPACE', 'MEM_RATE']
+    errorDict = {}
+
+    for _error in _errorType:
+        errorDict[_error] = 0
+
+    for line in file:
+        line = str(line)
+        line = line.split()
+        logTime = str(line[0]) + ' ' + str(line[1])
+        logType = str(line[2])
+
+        if 'ERROR' == logType:
+            errorType = str(line[3])
+            errorDict[errorType] += 1
+        elif 'DEBUG' == logType:
+            print 'do debug'
+        elif 'INFO' == logType:
+            print 'do info'
+        else:
+            print 'can not handle this %s' % logType
+
+    return errorDict
 
 def deBugOutPut():
     pids = psutil.pids()
@@ -120,7 +155,7 @@ if __name__ == '__main__':
 
     # preread the process info
     procs = psutil.process_iter()
-    pinfos = {}
+    pinfos = {'':0}
     for p in procs:
         try:
             pinfo = p.as_dict(attrs=['name', 'cpu_percent'])
@@ -130,8 +165,8 @@ if __name__ == '__main__':
             pinfos[pinfo['name']] = pinfo['cpu_percent']
 
     while True:
-        # weekReport()
-        # exit(0)
+        weekReport()
+        exit(0)
 
         alertcenter.alertInfos = ''
         # check cpu usage rate

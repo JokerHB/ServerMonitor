@@ -18,6 +18,13 @@ class Alert(object):
             # Log.log_Info(self.alertInfos);
             self.alertInfos = ''
 
+    # week report
+    def alert_week(self, emailInfo, Receiver, logger, weekInfo):
+        t = time.strftime('%a, %d %b %Y %H:%M:%S %z')
+        tmpEmail = Email.Email()
+        tmpEmail.setBaseInfo(emailInfo)
+        tmpEmail.sendMails(t + '\n' + weekInfo, Receiver, logger)
+
     # cpu alert, send top 10 process' cpu percent
     def cpuAlert(self, cpuInfo):
         alertInfo = 'CPU Number is ' + str(cpuInfo[0]) + '\n'
