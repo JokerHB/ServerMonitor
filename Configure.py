@@ -91,8 +91,8 @@ class Configure(Singleton):
     def getInterval(self):
         return self.getElement('interval')
 
-    def getLogFilePath(self):
-        return self.getElement(tagName='log', attr='filepath')
+    # def getLogFilePath(self):
+    #     return self.getElement(tagName='log', attr='filepath')
 
     def getTags(self, tagName):
         root = self.xml.documentElement

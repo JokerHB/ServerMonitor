@@ -2,7 +2,7 @@
 
 <configure>
         <interval value = "1.0" />
-        <log filepath="./Monitor_log.log"/>
+        <!--<log filepath="./Monitor_log.log"/>-->
         <email host = "example@example.com" user = "example@example.com" password ="" sender="" >
                 <receivers>
                         <receiver address = "example@example.com" />
@@ -19,7 +19,7 @@
                         <net_down_upper_limit value = "0.0" />
                         <net_down_lower_limit value = "-1.0" />
                         <net_wait_time  value = "2.0" />
-                        <net_interface value = "lo" />
+                        <net_interface value = "lo0" />
                 </net>
                 <mem>
                         <mem_upper_limit value = "80.0" />

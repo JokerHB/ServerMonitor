@@ -17,14 +17,14 @@ class Email(object):
     # endregion
 
     def __init__(self, receiver = None):
-        config = Configure.Configure('./config.xml')
-        self.logger = Loger.Loger(config.getLogFilePath())
+        # config = Configure.Configure('./config.xml')
+        # self.logger = Loger.Loger(config.getLogFilePath())
         if receiver == None:
             self.receivers = []
         else:
             self.receivers = copy.deepcopy(receiver)
 
-    def sendBaseMail(self, content, receiver):
+    def sendBaseMail(self, content, receiver, logger):
         msg = MIMEText(_text=content, _subtype='plain', _charset='utf-8')
         msg['From'] = self.addressFormat('Server Alert <%s>' % self.sender)
         msg['To'] = self.addressFormat('Admin <%s>' % receiver)
@@ -40,11 +40,11 @@ class Email(object):
             smtpObj.quit()
         except:
             # print 'send %s failed' % receiver
-            self.logger.log_Error('EMAIL_SEND_FAILED')
+            logger.log_Error('EMAIL_SEND_FAILED %s' % receiver)
 
-    def sendMails(self, content, receviers):
+    def sendMails(self, content, receviers, logger):
         for recv in receviers:
-            self.sendBaseMail(content, recv)
+            self.sendBaseMail(content, recv, logger)
 
     def addressFormat(self, add):
         name, address = parseaddr(add)

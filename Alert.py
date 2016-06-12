@@ -8,12 +8,12 @@ class Alert(object):
         self.alertInfos = ''
 
     # alert, send email to admin
-    def alert(self, emailInfo, Receiver):
+    def alert(self, emailInfo, Receiver, logger):
         if len(self.alertInfos) >0:
             t = time.strftime('%a, %d %b %Y %H:%M:%S %z')
             tmpEmail = Email.Email()
             tmpEmail.setBaseInfo(emailInfo)
-            tmpEmail.sendMails(t + '\n' + self.alertInfos, Receiver)
+            tmpEmail.sendMails(t + '\n' + self.alertInfos, Receiver, logger)
             # print  t + '\n' + self.alertInfos
             # Log.log_Info(self.alertInfos);
             self.alertInfos = ''

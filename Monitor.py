@@ -4,6 +4,7 @@ import SystemInfo
 import Alert
 import time
 import Loger
+import threading
 
 def cpuInfoCheck(cpuInfo):
     count = 0
@@ -38,6 +39,21 @@ def netInfoCheck(netInfo, interface):
     return False
 
 
+def weekReport():
+    file = open('Monitor-' + logFileName + '.log', 'r')
+
+    global logFileName
+    logFileName = time.strftime('%Y-%m-%d', time.localtime(time.time()))
+    global logger
+    logger = Loger.Loger('Monitor-' + logFileName + '.log')
+
+    for line in file:
+        print line
+
+    global t
+    t = threading.Timer(60 * 60 * 24 * 7, weekReport)
+    t.start()
+
 def deBugOutPut():
     pids = psutil.pids()
     systemInfo.getMemInfo(pids)
@@ -48,7 +64,8 @@ if __name__ == '__main__':
     config = Configure.Configure('./config.xml')
 
     # log file
-    logger = Loger.Loger(config.getLogFilePath())
+    logFileName=time.strftime('%Y-%m-%d',time.localtime(time.time()))
+    logger = Loger.Loger('Monitor-' + logFileName + '.log')
 
     # system info get
     systemInfo = SystemInfo.SystemInfo(pids=None, processName=None)
@@ -97,6 +114,10 @@ if __name__ == '__main__':
     receiver = config.getRecevier()
     interface = config.getNet().interface
 
+    # start timer -- week report
+    t = threading.Timer(60 * 60 * 24 * 7, weekReport)
+    t.start()
+
     # preread the process info
     procs = psutil.process_iter()
     pinfos = {}
@@ -109,6 +130,9 @@ if __name__ == '__main__':
             pinfos[pinfo['name']] = pinfo['cpu_percent']
 
     while True:
+        # weekReport()
+        # exit(0)
+
         alertcenter.alertInfos = ''
         # check cpu usage rate
         systemInfo.getCpuInfo()
@@ -186,7 +210,7 @@ if __name__ == '__main__':
         else:
             alertIgnore['pro'] = 0
 
-        alertcenter.alert(emailInfo=mailInfo, Receiver=receiver)
+        alertcenter.alert(emailInfo=mailInfo, Receiver=receiver, logger=logger)
 
         time.sleep(interval)
 
